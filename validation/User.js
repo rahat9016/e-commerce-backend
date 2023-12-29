@@ -9,13 +9,17 @@ exports.validationSignupRequest = [
         const user = await User.findOne({email: value})
         if(user) throw new Error("Email already use!")
     }),
-    check("phone").trim().isLength({min: 11}).withMessage("").notEmpty().withMessage("Phone number is required!").custom(async (value)=> {
+    check("phone").notEmpty().withMessage("Phone number is required!").isLength({min: 11}).withMessage("Phone number must be at least 11 chars long").notEmpty().custom(async (value)=> {
         const user = await User.findOne({phone: value});
         if(user) throw new Error ("Phone number already exits!")
     }),
-    check("password").isLength({min: 6}).withMessage("Password is required!").withMessage("Password must be at least 6 chars long")
+    check("password").notEmpty().withMessage("Password is required!").isLength({min: 6}).withMessage("Password must be at least 6 chars long")
 ]
-
+exports.validationSigningRequest = [
+    check('email').trim(),
+    check("phone").notEmpty().withMessage("Phone number is required!").isLength({min: 11}).withMessage("Phone number must be at least 11 chars long").notEmpty(),
+    check("password").notEmpty().withMessage("Password is required!").isLength({min: 6}).withMessage("Password must be at least 6 chars long")
+]
 exports.isRequestValidated = (req,res,next) => {
     const errors = validationResult(req);
     const mappedErrors = errors.mapped()

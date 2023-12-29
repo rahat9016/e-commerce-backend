@@ -1,19 +1,13 @@
 const express = require("express")
-const User = require("../../../model/User")
-const { validationSignupRequest, isRequestValidated } = require("../../../validation/User")
+const { validationSignupRequest, isRequestValidated, validationSigningRequest } = require("../../../validation/User")
+const { signup, signing } = require("../../../controller/admin/auth")
 const router = express.Router()
 
 
 // sing-up
-router.post("/signup", validationSignupRequest, isRequestValidated, (req,res)=>{
-    const newUser = new User({...req.body})
-    newUser.save().then(res => {
-        console.log(res)
-    }).catch(error=> {
-        console.log(error)
-    })
-})
-
+router.post("/signup", validationSignupRequest, isRequestValidated, signup)
+// signing
+router.post("/signing", validationSigningRequest, isRequestValidated, signing)
 
 
 module.exports = router
